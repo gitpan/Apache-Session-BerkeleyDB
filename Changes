@@ -1,0 +1,19 @@
+____________________________________________________________________________
+[   670] By: autrijus                              on 2002/08/16  18:42:29
+        Log: * 0.01: initial release.
+	   ! Makefile.PL README
+____________________________________________________________________________
+[   657] By: autrijus                              on 2002/08/16  05:53:51
+        Log: * it actually works now.
+	   ! lib/Apache/Session/Lock/BerkeleyDB.pm
+	   ! lib/Apache/Session/Store/BerkeleyDB.pm
+____________________________________________________________________________
+[   655] By: autrijus                              on 2002/08/16  04:25:44
+        Log: * obfiles.
+	   + Changes SIGNATURE
+____________________________________________________________________________
+[   653] By: autrijus                              on 2002/08/16  04:24:45
+        Log: * berkeleydb locking for the sad people on win32.
+	   + MANIFEST Makefile.PL README lib/Apache/Session/BerkeleyDB.pm
+	   + lib/Apache/Session/Lock/BerkeleyDB.pm
+	   + lib/Apache/Session/Store/BerkeleyDB.pm t/1-basic.t

@@ -1,0 +1,9 @@
+Changes
+MANIFEST			This list of files
+Makefile.PL
+README
+SIGNATURE
+lib/Apache/Session/BerkeleyDB.pm
+lib/Apache/Session/Lock/BerkeleyDB.pm
+lib/Apache/Session/Store/BerkeleyDB.pm
+t/1-basic.t
