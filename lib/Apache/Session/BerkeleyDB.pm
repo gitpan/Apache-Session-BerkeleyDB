@@ -1,25 +1,26 @@
 # $File: //member/autrijus/Apache-Session-BerkeleyDB/lib/Apache/Session/BerkeleyDB.pm $ $Author: autrijus $
-# $Revision: #1 $ $Change: 653 $ $DateTime: 2002/08/16 04:24:45 $
+# $Revision: #3 $ $Change: 754 $ $DateTime: 2002/08/21 10:51:57 $
 
 package Apache::Session::BerkeleyDB;
 
 use strict;
 use vars qw(@ISA $VERSION);
 
-$VERSION = '1.01';
+$VERSION = '1.02';
 @ISA = qw(Apache::Session);
 
 use Apache::Session;
-use Apache::Session::Lock::BerkeleyDB;
 use Apache::Session::Store::BerkeleyDB;
+use Apache::Session::Lock::BerkeleyDB;
 use Apache::Session::Generate::MD5;
 use Apache::Session::Serialize::Storable;
 
 sub populate {
     my $self = shift;
 
-    $self->{object_store} = new Apache::Session::Store::BerkeleyDB $self;
-    $self->{lock_manager} = new Apache::Session::Lock::BerkeleyDB $self;
+    # Store must come before Lock so that it can be accessed within.
+    $self->{object_store} = Apache::Session::Store::BerkeleyDB->new($self);
+    $self->{lock_manager} = Apache::Session::Lock::BerkeleyDB->new($self);
     $self->{generate}     = \&Apache::Session::Generate::MD5::generate;
     $self->{validate}     = \&Apache::Session::Generate::MD5::validate;
     $self->{serialize}    = \&Apache::Session::Serialize::Storable::serialize;

@@ -1,4 +1,21 @@
 ____________________________________________________________________________
+[   754] By: autrijus                              on 2002/08/21  10:51:57
+        Log: * This be 1.02.
+             * Store is now saved inside the Lock object to ensure correct destruction.
+	   ! lib/Apache/Session/BerkeleyDB.pm
+	   ! lib/Apache/Session/Lock/BerkeleyDB.pm
+	   ! lib/Apache/Session/Store/BerkeleyDB.pm
+____________________________________________________________________________
+[   752] By: autrijus                              on 2002/08/21  10:41:30
+        Log: * seems to be working okay now; locking remains to be investigated.
+	   ! SIGNATURE lib/Apache/Session/BerkeleyDB.pm
+	   ! lib/Apache/Session/Lock/BerkeleyDB.pm
+	   ! lib/Apache/Session/Store/BerkeleyDB.pm
+____________________________________________________________________________
+[   671] By: autrijus                              on 2002/08/16  18:43:42
+        Log: * changes and signature.
+	   ! Changes SIGNATURE
+____________________________________________________________________________
 [   670] By: autrijus                              on 2002/08/16  18:42:29
         Log: * 0.01: initial release.
 	   ! Makefile.PL README

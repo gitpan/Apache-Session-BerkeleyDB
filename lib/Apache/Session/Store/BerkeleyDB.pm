@@ -1,5 +1,5 @@
 # $File: //member/autrijus/Apache-Session-BerkeleyDB/lib/Apache/Session/Store/BerkeleyDB.pm $ $Author: autrijus $
-# $Revision: #2 $ $Change: 657 $ $DateTime: 2002/08/16 05:53:51 $
+# $Revision: #4 $ $Change: 754 $ $DateTime: 2002/08/21 10:51:57 $
 
 package Apache::Session::Store::BerkeleyDB;
 
@@ -8,7 +8,7 @@ use vars qw($VERSION);
 use BerkeleyDB;
 use File::Basename;
 
-$VERSION = '1.01';
+$VERSION = '1.02';
 
 sub new {
     my $class = shift;
@@ -42,6 +42,16 @@ sub _tie {
 
     return 1;
 }
+
+sub _untie {
+    my ($self) = @_;
+    return unless $self->{dbm} and tied %{$self->{dbm}};
+    untie(%{$self->{dbm}});
+}
+
+sub close   { my $self = shift; $self->_untie }
+sub UNTIE   { my $self = shift; $self->_untie }
+sub DESTROY { my $self = shift; $self->_untie }
 
 sub insert {
     my $self    = shift;

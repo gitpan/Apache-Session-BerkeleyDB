@@ -1,5 +1,5 @@
 # $File: //member/autrijus/Apache-Session-BerkeleyDB/lib/Apache/Session/Lock/BerkeleyDB.pm $ $Author: autrijus $
-# $Revision: #2 $ $Change: 657 $ $DateTime: 2002/08/16 05:53:51 $
+# $Revision: #4 $ $Change: 754 $ $DateTime: 2002/08/21 10:51:57 $
 
 package Apache::Session::Lock::BerkeleyDB;
 
@@ -7,20 +7,34 @@ use strict;
 use vars qw($VERSION);
 use BerkeleyDB;
 
-$VERSION = '1.01';
+$VERSION = '1.02';
 
 sub new {
     my $class = shift;
-    return bless { read => 0, write => 0, id => 0 }, $class;
+    my $session = shift;
+    my $self = bless {
+	read	=> 0,
+	write	=> 0,
+	id	=> 0,
+	_store	=> $session->{object_store},
+    }, $class;
+
+    my $store = $self->{_store} or return $self;
+
+    # clear up the original caches.
+    $store->_tie($session);
+    $store->{dbm}{__readlock} = 0;
+    $store->{dbm}{__writelock} = 0;
+
+    return $self;
 }
 
 sub acquire_read_lock  {
     my $self    = shift;
     my $session = shift;
-    
     return if $self->{read};
 
-    my $store = $session->{object_store};
+    my $store = $self->{_store} or return;
     $store->_tie($session);
     my $txn = $store->{env}->txn_begin;
 
@@ -34,8 +48,9 @@ sub acquire_read_lock  {
 sub acquire_write_lock {
     my $self    = shift;
     my $session = shift;
+    return if $self->{write};
 
-    my $store = $session->{object_store};
+    my $store = $self->{_store} or return;
     $store->_tie($session);
     my $txn = $store->{env}->txn_begin;
 
@@ -49,13 +64,12 @@ sub acquire_write_lock {
 sub release_read_lock  {
     my $self    = shift;
     my $session = shift;
-    
     return unless $self->{read};
 
-    my $store = $session->{object_store} or return;
+    my $store = $self->{_store} or return;
     $store->_tie($session);
     $store->{dbm}{__readlock} -= 1;
-    $store->{txn_read}->txn_commit;
+    $store->{txn_read}->txn_commit if $store->{txn_read};
     
     $self->{read} = 0;
 }
@@ -63,13 +77,12 @@ sub release_read_lock  {
 sub release_write_lock {
     my $self    = shift;
     my $session = shift;
-    
     return unless $self->{write};
     
-    my $store = $session->{object_store};
+    my $store = $self->{_store} or return;
     $store->_tie($session);
     $store->{dbm}{__writelock} -= 1;
-    $store->{txn_write}->txn_commit;
+    $store->{txn_write}->txn_commit if $store->{txn_write};
     
     $self->{write} = 0;
 }
@@ -79,19 +92,12 @@ sub release_all_locks  {
     my $session = shift;
 
     $self->release_write_lock($session) if $self->{write};
-    $self->release_read_lock($session) if $self->{read};
-    
-    $self->{read}   = 0;
-    $self->{write}  = 0;
+    $self->release_read_lock($session)  if $self->{read};
 }
 
-sub DESTROY {
-    my $self = shift;
-    $self->release_all_locks;
-}
-
-sub clean {
-}
+sub UNTIE   { my $self = shift; $self->release_all_locks }
+sub DESTROY { my $self = shift; $self->release_all_locks }
+sub clean { }
 
 1;
 

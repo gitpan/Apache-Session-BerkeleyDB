@@ -14,18 +14,18 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 640dbeceef8cf459bbb7969a7873d3c3b7752dc5 Changes
+SHA1 b9efd991f5eed09bd5fdf676a0cc3821aa57880d Changes
 SHA1 edc95f5bc2e2f04cae23594bfc47288e25500ffe MANIFEST
 SHA1 2874db8f7ef0b2d9e37ba46fe6771a658ff4586e Makefile.PL
 SHA1 60d15896c33daaea37ab8f9d8a51670ea1431f61 README
-SHA1 b6d1bdbd23d246531461e26bc2dcb6ae678543ed lib/Apache/Session/BerkeleyDB.pm
-SHA1 e2eb79b2ce5578b3e15b8e7359518ba7ec3cce7d lib/Apache/Session/Lock/BerkeleyDB.pm
-SHA1 6d4a229518a6920f94bcd5971d86b6d1af4b58c7 lib/Apache/Session/Store/BerkeleyDB.pm
+SHA1 f597cfaeae8c303a12a06d193be995db9665c6b3 lib/Apache/Session/BerkeleyDB.pm
+SHA1 faf587d76e631d40a4138669fc1a7aa95a6e2913 lib/Apache/Session/Lock/BerkeleyDB.pm
+SHA1 c18a194038af6708a65823e3f1b99d4d18467f79 lib/Apache/Session/Store/BerkeleyDB.pm
 SHA1 ca53204be92a608bc94923cd1ada7310b90ce1dd t/1-basic.t
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.0.7 (FreeBSD)
 
-iD8DBQE9YXaXtLPdNzw1AaARAtzNAJ9ffseCf0YbvxLwAfX/D0eric+UdQCfV/TU
-+0BUlxYpyXaJKf9wZOVqCoY=
-=C+c8
+iD8DBQE9Y9b2tLPdNzw1AaARAm5mAJ9wwJlQk9D264O/SYgYyuJez7OcRwCdG85x
+mejGhmzZGjsRv9MzBhX0lMk=
+=c2Be
 -----END PGP SIGNATURE-----
