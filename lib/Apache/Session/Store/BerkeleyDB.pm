@@ -8,7 +8,7 @@ use vars qw($VERSION);
 use BerkeleyDB;
 use File::Basename;
 
-$VERSION = '1.00';
+$VERSION = '1.01';
 
 sub new {
     my $class = shift;
@@ -35,11 +35,7 @@ sub _tie {
 	-Flags     => DB_CREATE,
 	-Env       => $env,
 	-Txn       => $txn,
-    );
-
-    if (!$rv) {
-	die "Could not open dbm file: $!";
-    }
+    ) or die "Could not open BerkeleyDB file: $!";
 
     $self->{env} = $env;
     $self->{db} = $rv;
@@ -125,6 +121,10 @@ it will be created.  Example:
 
  tie %s, 'Apache::Session::BerkeleyDB', undef,
     {FileName => '/tmp/sessions'};
+
+Additionally, you may specify a C<Directory> option, which is taken to be
+the place to put BerkeleyDB's transaction data files.  If omitted, it defaults
+to the C<db_env> subdirectory under the directory of C<FileName>.
 
 =head1 SEE ALSO
 

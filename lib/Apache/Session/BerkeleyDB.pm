@@ -6,7 +6,7 @@ package Apache::Session::BerkeleyDB;
 use strict;
 use vars qw(@ISA $VERSION);
 
-$VERSION = '1.00';
+$VERSION = '1.01';
 @ISA = qw(Apache::Session);
 
 use Apache::Session;
@@ -28,6 +28,19 @@ sub populate {
     return $self;
 }
 
+sub UNTIE {
+    my $self = shift;
+
+    $self->save;
+    $self->{object_store}->close;
+    $self->release_all_locks;
+}
+
+sub DESTROY {
+    my $self = shift;
+    $self->UNTIE if $self->{object_store};
+}
+
 1;
 
 =pod
@@ -42,14 +55,17 @@ Apache::Session::BerkeleyDB - An implementation of Apache::Session
  
  tie %hash, 'Apache::Session::BerkeleyDB', $id, {
 	FileName  => 'sessions.db',
+	Directory => '/tmp',
  };
 
 =head1 DESCRIPTION
 
 This module is an implementation of Apache::Session.  It uses the BerkeleyDB
 backing store and the BerkeleyDB locking scheme.  You must specify the filename of
-the database file and the directory for locking in arguments to the constructor.
-See the example, and the documentation for Apache::Session::Store::BerkeleyDB and
+the database file to the constructor, and optionally the directory for putting
+transaction data.
+
+See the example and the documentation for Apache::Session::Store::BerkeleyDB and
 Apache::Session::Lock::BerkeleyDB.
 
 =head1 SEE ALSO

@@ -7,7 +7,7 @@ use strict;
 use vars qw($VERSION);
 use BerkeleyDB;
 
-$VERSION = '1.00';
+$VERSION = '1.01';
 
 sub new {
     my $class = shift;
@@ -26,7 +26,7 @@ sub acquire_read_lock  {
 
     $store->{db}->Txn($txn); $store->{dbm}{__readlock} += 1;
     while ($store->{dbm}{__readlock} > 1) { sleep 1 }
-    $store->{txn_write} = $txn;
+    $store->{txn_read} = $txn;
 
     $self->{read} = 1;
 }
@@ -41,7 +41,7 @@ sub acquire_write_lock {
 
     $store->{db}->Txn($txn); $store->{dbm}{__writelock} += 1;
     while ($store->{dbm}{__writelock} > 1) { sleep 1 }
-    $store->{txn_read} = $txn;
+    $store->{txn_write} = $txn;
 
     $self->{write} = 1;
 }
@@ -50,7 +50,7 @@ sub release_read_lock  {
     my $self    = shift;
     my $session = shift;
     
-    die unless $self->{read};
+    return unless $self->{read};
 
     my $store = $session->{object_store} or return;
     $store->_tie($session);
@@ -64,7 +64,7 @@ sub release_write_lock {
     my $self    = shift;
     my $session = shift;
     
-    die unless $self->{write};
+    return unless $self->{write};
     
     my $store = $session->{object_store};
     $store->_tie($session);
